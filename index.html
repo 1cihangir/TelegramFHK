@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex İşlem Tablosu</title>
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #17212b;
+            color: #f5f5f5;
+            padding: 16px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 18px;
+            color: #5288c1;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #242f3d;
+            min-width: 500px;
+        }
+
+        th {
+            background-color: #1c2733;
+            color: #7996b5;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border: 1px solid #2b3a4e;
+        }
+
+        td {
+            padding: 8px;
+            border: 1px solid #2b3a4e;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            background-color: #17212b;
+            border: 1px solid #2b3a4e;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #5288c1;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #2ea6ff;
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:active {
+            background-color: #1d8cd8;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📊 Forex İşlem Girişi</h2>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th>Saat</th>
+                    <th>Parite</th>
+                    <th>Lot</th>
+                    <th>Giriş Fiyatı</th>
+                    <th>Çıkış Fiyatı</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <tr>
+                    <td><input type="date" id="tarih"></td>
+                    <td><input type="time" id="saat"></td>
+                    <td><input type="text" id="parite" placeholder="XAUUSD"></td>
+                    <td><input type="number" step="0.01" id="lot" placeholder="0.10"></td>
+                    <td><input type="number" step="0.001" id="giris" placeholder="2500.00"></td>
+                    <td><input type="number" step="0.001" id="cikis" placeholder="2550.00"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="btn-submit" onclick="verileriGonder()">Değişiklikleri Kaydet</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        // Varsayılan bugünün tarihi ve saati
+        const simdi = new Date();
+        document.getElementById('tarih').value = simdi.toISOString().split('T')[0];
+        document.getElementById('saat').value = simdi.toTimeString().slice(0, 5);
+
+        function verileriGonder() {
+            const veri = {
+                tarih: document.getElementById('tarih').value,
+                saat: document.getElementById('saat').value,
+                parite: document.getElementById('parite').value,
+                lot: document.getElementById('lot').value,
+                giris: document.getElementById('giris').value,
+                cikis: document.getElementById('cikis').value
+            };
+
+            // Telegram botuna JSON formatında ilet
+            tg.sendData(JSON.stringify(veri));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
